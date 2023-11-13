@@ -23,7 +23,7 @@ const Checkbox = ({ checked, onCheck }) => {
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: colors.blue,
+    backgroundColor: colors.white,
     borderColor: colors.grey,
     borderWidth: 1,
     borderRadius: 4,
@@ -42,4 +42,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default Checkbox;
+export default React.memo(Checkbox);

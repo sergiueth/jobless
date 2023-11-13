@@ -6,6 +6,7 @@ import Input from "../../../components/Input";
 import Checkbox from "../../../components/Checkbox";
 import Button from "../../../components/Button";
 import Separator from "../../../components/Separator";
+import GoogleLogin from "../../../components/GoogleLogin";
 
 const Signup = () => {
   const [checked, setChecked] = useState(false);
@@ -29,6 +30,8 @@ const Signup = () => {
         <Button style={styles.button} title="Sign Up" />
 
         <Separator text="Or sign up with" />
+
+        <GoogleLogin />
       </View>
     </>
   );

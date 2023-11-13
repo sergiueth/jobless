@@ -1,8 +1,11 @@
 import { StatusBar } from "expo-status-bar";
 import { StyleSheet, View } from "react-native";
 import Signup from "./src/screens/auth/Signup";
+import { useEffect } from "react";
 
 export default function App() {
+  useEffect(() => {}, []);
+
   return (
     <View style={styles.container}>
       <StatusBar style="auto" />
