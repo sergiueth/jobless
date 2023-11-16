@@ -3,44 +3,32 @@ import { Image, Text, StyleSheet, View } from "react-native";
 import { colors } from "../../../utils/colors";
 import AuthHeader from "../../../components/AuthHeader";
 import Input from "../../../components/Input";
-import Checkbox from "../../../components/Checkbox";
 import Button from "../../../components/Button";
 import Separator from "../../../components/Separator";
 import GoogleLogin from "../../../components/GoogleLogin";
 
-const Signup = () => {
-  const [checked, setChecked] = useState(false);
-
-  const onSignIn = () => {
+const Signin = () => {
+  const onSignUp = () => {
     console.log("Hello");
   };
 
   return (
     <>
       <View style={styles.container}>
-        <AuthHeader title="Sign Up" />
-        <Input label="Name" placeholder="John Doe" />
+        <AuthHeader title="Sign In" />
         <Input label="E-mail" placeholder="example@gmail.com" />
         <Input isPassword label="Pawssord" placeholder="********" />
 
-        <View style={styles.agreeRow}>
-          <Checkbox checked={checked} onCheck={setChecked} />
-          <Text style={styles.agreeText}>
-            I agree with <Text style={styles.agreeTextBold}>Terms</Text>&
-            <Text style={styles.agreeTextBold}>Privacy Policy</Text>
-          </Text>
-        </View>
+        <Button style={styles.button} title="Sign In" />
 
-        <Button style={styles.button} title="Sign Up" />
-
-        <Separator text="Or sign up with" />
+        <Separator text="Or sign in with" />
 
         <GoogleLogin />
 
         <Text style={styles.footerText}>
-          Already have an account?{" "}
-          <Text onPress={onSignIn} style={styles.footerLink}>
-            Sign In
+          Don't have an account?{" "}
+          <Text onPress={onSignUp} style={styles.footerLink}>
+            Sign Up
           </Text>
         </Text>
       </View>
@@ -80,4 +68,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default Signup;
+export default Signin;
