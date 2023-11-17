@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Image, Text, StyleSheet, View } from "react-native";
+import { Image, Text, StyleSheet, View, ScrollView } from "react-native";
 import { colors } from "../../../utils/colors";
 import AuthHeader from "../../../components/AuthHeader";
 import Input from "../../../components/Input";
@@ -7,15 +7,19 @@ import Button from "../../../components/Button";
 import Separator from "../../../components/Separator";
 import GoogleLogin from "../../../components/GoogleLogin";
 
-const Signin = () => {
+const Signin = ({ navigation }) => {
   const onSignUp = () => {
-    console.log("Hello");
+    navigation.navigate("Signup");
+  };
+
+  const onBack = () => {
+    navigation.goBack();
   };
 
   return (
     <>
-      <View style={styles.container}>
-        <AuthHeader title="Sign In" />
+      <ScrollView style={styles.container}>
+        <AuthHeader onBackPress={onBack} title="Sign In" />
         <Input label="E-mail" placeholder="example@gmail.com" />
         <Input isPassword label="Pawssord" placeholder="********" />
 
@@ -31,7 +35,7 @@ const Signin = () => {
             Sign Up
           </Text>
         </Text>
-      </View>
+      </ScrollView>
     </>
   );
 };
@@ -42,6 +46,7 @@ const styles = StyleSheet.create({
     maxWidth: 380, // Set your desired maximum width
     alignSelf: "center", // Center the container horizontally
     padding: 24,
+    marginTop: 40,
   },
   agreeRow: {
     flexDirection: "row",

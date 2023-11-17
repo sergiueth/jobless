@@ -1,9 +1,24 @@
 import React from "react";
-import { Image, Text, StyleSheet, View, Pressable } from "react-native";
+import {
+  Image,
+  Text,
+  StyleSheet,
+  View,
+  Pressable,
+  ScrollView,
+} from "react-native";
 import Button from "../../../components/Button";
 import { colors } from "../../../utils/colors";
 
-const Splash = () => {
+const Splash = ({ navigation }) => {
+  const onSignup = () => {
+    navigation.navigate("Signup");
+  };
+
+  const onSignin = () => {
+    navigation.navigate("Signin");
+  };
+
   return (
     <>
       <View style={styles.container}>
@@ -19,9 +34,9 @@ const Splash = () => {
           <Text style={styles.title}>Here!</Text>
         </View>
 
-        <Button title="Sign Up" />
+        <Button onPress={onSignup} style={styles.button} title="Sign Up" />
 
-        <Pressable hitSlop={20}>
+        <Pressable onPress={onSignin} hitSlop={20}>
           <Text style={styles.footerText}>Sign In</Text>
         </Pressable>
       </View>
@@ -35,14 +50,15 @@ const styles = StyleSheet.create({
     flexDirection: "column",
     justifyContent: "center",
     alignItems: "center",
+    paddingTop: 100,
   },
   image: {
     width: 380,
     height: 200,
-    paddingTop: 400,
+    paddingTop: 340,
   },
   titleContainer: {
-    marginContainer: 54,
+    marginContainer: 34,
   },
   title: {
     fontSize: 40,
@@ -53,10 +69,14 @@ const styles = StyleSheet.create({
     color: colors.orange,
     textDecorationLine: "underline",
   },
+  button: {
+    marginTop: 30,
+    marginBottom: 30,
+  },
   footerText: {
     color: colors.blue,
     textAlign: "center",
-    paddingBottom: 100,
+    paddingBottom: 200,
     fontSize: 16,
     fontWeight: "bold",
   },

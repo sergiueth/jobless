@@ -7,18 +7,27 @@ import Checkbox from "../../../components/Checkbox";
 import Button from "../../../components/Button";
 import Separator from "../../../components/Separator";
 import GoogleLogin from "../../../components/GoogleLogin";
+import { SafeAreaView } from "react-native-safe-area-context";
 
-const Signup = () => {
+const Signup = ({ navigation }) => {
   const [checked, setChecked] = useState(false);
 
   const onSignIn = () => {
-    console.log("Hello");
+    navigation.navigate("Signin");
+  };
+
+  const onBack = () => {
+    navigation.goBack();
   };
 
   return (
     <>
       <View style={styles.container}>
-        <AuthHeader title="Sign Up" />
+        <AuthHeader
+          onBackPress={onBack}
+          style={styles.authHeader}
+          title="Sign Up"
+        />
         <Input label="Name" placeholder="John Doe" />
         <Input label="E-mail" placeholder="example@gmail.com" />
         <Input isPassword label="Pawssord" placeholder="********" />
@@ -52,9 +61,10 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     maxWidth: 380, // Set your desired maximum width
+    marginTop: 40,
     alignSelf: "center", // Center the container horizontally
-    padding: 24,
   },
+  authHeader: {},
   agreeRow: {
     flexDirection: "row",
     alignItems: "center",
@@ -72,7 +82,7 @@ const styles = StyleSheet.create({
   },
   footerText: {
     color: colors.blue,
-    marginTop: 46,
+    marginTop: 26,
     textAlign: "center",
   },
   footerLink: {
