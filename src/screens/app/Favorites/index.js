@@ -13,4 +13,10 @@ const Favorites = () => {
   );
 };
 
+const styles = StyleSheet.create({
+  container: {
+    padding: 24,
+  },
+});
+
 export default React.memo(Favorites);
