@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { FlatList, StyleSheet, ScrollView, View, Text } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import Header from "../../../components/Header";
@@ -8,9 +8,39 @@ import CategoryBox from "../../../components/CategoryBox";
 import ProductHomeItem from "../../../components/ProductHomeItem";
 
 const Home = () => {
+  const [selectedCategory, setSelectedCatgory] = useState();
+  const [keyword, setKeyword] = useState();
+  const [filteredProducts, setFilteredProducts] = useState(products);
+  console.log("keyword :>>", keyword);
+
+  useEffect(() => {
+    if (selectedCategory && !keyword) {
+      const updatedProducts = products.filter(
+        (product) => product?.category === selectedCategory
+      );
+      setFilteredProducts(updatedProducts);
+    } else if (selectedCategory && keyword) {
+      const updatedProducts = products.filter(
+        (product) =>
+          product?.category === selectedCategory &&
+          product?.title?.toLowerCase().includes(keyword?.toLowerCase())
+      );
+      setFilteredProducts(updatedProducts);
+    } else if (!selectedCategory && keyword) {
+      const updatedProducts = products.filter((product) =>
+        product?.title?.toLowerCase().includes(keyword?.toLowerCase())
+      );
+      setFilteredProducts(updatedProducts);
+    } else if (!keyword && !selectedCategory) {
+      setFilteredProducts(products);
+    }
+  }, [selectedCategory, keyword]);
+
   const renderCategoryItem = ({ item, index }) => {
     return (
       <CategoryBox
+        onPress={() => setSelectedCatgory(item?.id)}
+        isSelected={item?.id === selectedCategory}
         isFirst={index === 0}
         title={item?.title}
         image={item?.image}
@@ -25,7 +55,12 @@ const Home = () => {
   return (
     <SafeAreaView>
       <ScrollView style={styles.container}>
-        <Header showSearch title="Find All you Need" />
+        <Header
+          showSearch
+          onSearch={setKeyword}
+          keyword={keyword}
+          title="Find All you Need"
+        />
 
         <FlatList
           showsHorizontalScrollIndicator={false}
@@ -44,7 +79,7 @@ const Home = () => {
           <FlatList
             style={styles.productsList}
             numColumns={2}
-            data={products}
+            data={filteredProducts}
             renderItem={renderProductItem}
             keyExtractor={(item) => String(item.id)}
             ListFooterComponent={<View style={{ height: 200 }} />}
