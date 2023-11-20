@@ -34,7 +34,9 @@ const Splash = ({ navigation }) => {
           <Text style={styles.title}>Here!</Text>
         </View>
 
-        <Button onPress={onSignup} style={styles.button} title="Sign Up" />
+        <View style={styles.buttonCont}>
+          <Button onPress={onSignup} style={styles.button} title="Sign Up" />
+        </View>
 
         <Pressable onPress={onSignin} hitSlop={20}>
           <Text style={styles.footerText}>Sign In</Text>
@@ -79,6 +81,10 @@ const styles = StyleSheet.create({
     paddingBottom: 200,
     fontSize: 16,
     fontWeight: "bold",
+  },
+  buttonCont: {
+    width: "100%",
+    flexDirection: "row",
   },
 });
 

@@ -26,6 +26,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     maxWidth: 380,
     alignSelf: "center",
+    flex: 1,
   },
   title: {
     color: colors.white,

@@ -40,7 +40,9 @@ const Signup = ({ navigation }) => {
           </Text>
         </View>
 
-        <Button style={styles.button} title="Sign Up" />
+        <View style={styles.buttonCont}>
+          <Button style={styles.button} title="Sign Up" />
+        </View>
 
         <Separator text="Or sign up with" />
 
@@ -87,6 +89,10 @@ const styles = StyleSheet.create({
   },
   footerLink: {
     fontWeight: "bold",
+  },
+  buttonCont: {
+    width: "90%",
+    flexDirection: "row",
   },
 });
 

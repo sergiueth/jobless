@@ -2,13 +2,15 @@ import React from "react";
 import {
   ScrollView,
   Text,
-  Image,
   View,
+  Image,
+  Dimensions,
+  StyleSheet,
   Pressable,
   Linking,
 } from "react-native";
-import { styles } from "./styles";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { colors } from "../../../utils/colors";
 import Button from "../../../components/Button";
 import ImageCarousel from "../../../components/ImageCarousel";
 
@@ -21,7 +23,7 @@ const ProductDetails = ({ route, navigation }) => {
 
   const onContact = () => {
     // Make a phone call
-    const phone = "127282827";
+    const phone = "124312412";
     Linking.openURL(`tel:${phone}`);
 
     // Send an Email
@@ -52,16 +54,80 @@ const ProductDetails = ({ route, navigation }) => {
       </ScrollView>
 
       <View style={styles.footer}>
-        <Pressable style={styles.bookmarkContainer}>
-          <Image
-            style={styles.bookmarkIcon}
-            source={require("../../../assets/bookmark_blue.png")}
-          />
-        </Pressable>
-        <Button onPress={onContact} title="Contact Seller" />
+        <View>
+          <Pressable style={styles.bookmarkContainer}>
+            <Image
+              style={styles.bookmarkIcon}
+              source={require("../../../assets/bookmark_blue.png")}
+            />
+          </Pressable>
+        </View>
+        <Button onPress={onContact} title="Contact Company" />
       </View>
     </SafeAreaView>
   );
 };
+
+const { height } = Dimensions.get("window");
+
+const styles = StyleSheet.create({
+  safe: {
+    flex: 1,
+  },
+  footer: {
+    padding: 24,
+    flexDirection: "row",
+    alignItems: "center",
+  },
+  container: {},
+  image: {
+    width: "100%",
+    height: height * 0.45,
+  },
+  content: {
+    backgroundColor: colors.white,
+    borderTopLeftRadius: 16,
+    borderTopRightRadius: 16,
+    marginTop: -40,
+    paddingHorizontal: 24,
+  },
+  title: {
+    marginTop: 40,
+    fontSize: 24,
+    fontWeight: "500",
+  },
+  price: {
+    fontSize: 30,
+    fontWeight: "bold",
+    marginVertical: 8,
+  },
+  description: {
+    color: colors.textGrey,
+    fontWeight: "300",
+    marginVertical: 8,
+  },
+  bookmarkContainer: {
+    backgroundColor: colors.lightGrey,
+    padding: 18,
+    borderRadius: 8,
+    marginRight: 16,
+  },
+  bookmarkIcon: {
+    width: 23,
+    height: 24,
+  },
+  backContainer: {
+    backgroundColor: colors.white,
+    padding: 10,
+    margin: 24,
+    borderRadius: 8,
+    marginRight: 16,
+    position: "absolute",
+  },
+  backIcon: {
+    width: 20,
+    height: 20,
+  },
+});
 
 export default React.memo(ProductDetails);
