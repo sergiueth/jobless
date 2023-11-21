@@ -9,13 +9,13 @@ import Favorties from "./src/screens/app/Favorites";
 import Profile from "./src/screens/app/Profile";
 import Settings from "./src/screens/app/Settings";
 import ProductDetails from "./src/screens/app/ProductDetails/";
-
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { colors } from "./src/utils/colors";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import { Image } from "react-native";
+import CreateListing from "./src/screens/app/CreateListing";
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -31,6 +31,11 @@ const ProfileStack = () => {
       <Stack.Screen
         name="Settings"
         component={Settings}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="CreateListing"
+        component={CreateListing}
         options={{ headerShown: false }}
       />
     </Stack.Navigator>
