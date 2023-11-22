@@ -73,7 +73,10 @@ const CreateListing = ({ navigation }) => {
         title="Create a new listing"
       />
 
-      <KeyboardAvoidingView behavior="padding" style={{ flex: 1 }}>
+      <KeyboardAvoidingView
+        behavior={Platform.OS === "ios" ? "height" : "height"} // Use "padding" for iOS, "height" for Android
+        style={{ flex: 1 }}
+      >
         <ScrollView style={styles.container}>
           <Text style={styles.sectionTitle}>Upload Photos</Text>
 
