@@ -1,14 +1,13 @@
-import React, { useState } from "react";
+import React from "react";
 import { Text, StyleSheet, View, Pressable, Image } from "react-native";
 import { colors } from "../../utils/colors";
-import Input from "../Input";
 import { Dimensions } from "react-native";
 
 const { width } = Dimensions.get("window");
 
 console.log("width :>", width);
 
-const FavoritesItem = ({ title, price, image, onPress }) => {
+const FavoritesItem = ({ title, price, icon, image, onPress }) => {
   return (
     <Pressable onPress={onPress} style={styles.container}>
       <Image style={styles.image} source={{ uri: image }} />
@@ -18,7 +17,10 @@ const FavoritesItem = ({ title, price, image, onPress }) => {
         <Text style={styles.price}>{price}</Text>
       </View>
 
-      <Image source={require("../../assets/close.png")} style={styles.icon} />
+      <Image
+        source={icon || require("../../assets/close.png")}
+        style={styles.icon}
+      />
     </Pressable>
   );
 };

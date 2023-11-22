@@ -11,6 +11,7 @@ import {
   KeyboardAvoidingView,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view"; // Import KeyboardAwareScrollView
 import Header from "../../../components/Header";
 import { colors } from "../../../utils/colors";
 import { launchCameraAsync, launchImageLibraryAsync } from "expo-image-picker";
@@ -22,6 +23,7 @@ const CreateListing = ({ navigation }) => {
   const [images, setImages] = useState([]);
   const [values, setValues] = useState({});
   const [loading, setLoading] = useState(false);
+  console.log("values :>>", values);
 
   const goBack = () => {
     navigation.goBack();
@@ -73,76 +75,74 @@ const CreateListing = ({ navigation }) => {
         title="Create a new listing"
       />
 
-      <KeyboardAvoidingView
-        behavior={Platform.OS === "ios" ? "height" : "height"} // Use "padding" for iOS, "height" for Android
-        style={{ flex: 1 }}
+      <KeyboardAwareScrollView
+        style={styles.container}
+        contentContainerStyle={{ flexGrow: 1 }}
+        enableOnAndroid={true}
+        extraHeight={Platform.OS === "ios" ? 120 : 280} // Adjust the offset if needed
       >
-        <ScrollView style={styles.container}>
-          <Text style={styles.sectionTitle}>Upload Photos</Text>
+        <Text style={styles.sectionTitle}>Upload Photos</Text>
 
-          <View style={styles.imageRow}>
-            <TouchableOpacity
-              style={styles.uploadContainer}
-              onPress={() => uploadNewImage(false)}
-            >
-              <View style={styles.uploadCircle}>
-                <Text style={styles.uploadPlus}>+</Text>
-              </View>
-            </TouchableOpacity>
+        <View style={styles.imageRow}>
+          <TouchableOpacity
+            style={styles.uploadContainer}
+            onPress={() => uploadNewImage(false)}
+          >
+            <View style={styles.uploadCircle}>
+              <Text style={styles.uploadPlus}>+</Text>
+            </View>
+          </TouchableOpacity>
 
-            {images.map((image, index) => (
-              <View style={styles.imageCont} key={image.uri}>
-                <Image style={styles.image} source={{ uri: image.uri }} />
-                <Pressable
-                  hitSlop={20}
-                  onPress={() => onDeleteImage(image.uri)}
-                >
-                  <Image
-                    style={styles.delete}
-                    source={require("../../../assets/close.png")}
-                  />
-                </Pressable>
-              </View>
-            ))}
-            {loading && (
-              <View style={styles.loadingContainer}>
-                <ActivityIndicator size="small" color={colors.darkGrey} />
-              </View>
-            )}
-          </View>
-          <KeyboardAvoidingView behavior="padding">
-            <Input
-              placeholder="Listing Title"
-              label="Title"
-              value={values.title}
-              onChangeText={(v) => onChange(v, "title")}
-            />
-            <Input
-              placeholder="Select the category"
-              label="Category"
-              value={values.category}
-              onChangeText={(v) => onChange(v, "category")}
-              type="picker"
-              options={categories}
-            />
-            <Input
-              placeholder="Enter price in USD"
-              label="Price"
-              value={values.price}
-              onChangeText={(v) => onChange(v, "price")}
-              keyboardType="numeric"
-            />
-            <Input
-              style={styles.textarea}
-              placeholder="Tell us more..."
-              label="Description"
-              value={values.description}
-              onChangeText={(v) => onChange(v, "description")}
-              multiline
-            />
-          </KeyboardAvoidingView>
-        </ScrollView>
-      </KeyboardAvoidingView>
+          {images.map((image, index) => (
+            <View style={styles.imageCont} key={image.uri}>
+              <Image style={styles.image} source={{ uri: image.uri }} />
+              <Pressable hitSlop={20} onPress={() => onDeleteImage(image.uri)}>
+                <Image
+                  style={styles.delete}
+                  source={require("../../../assets/close.png")}
+                />
+              </Pressable>
+            </View>
+          ))}
+          {loading && (
+            <View style={styles.loadingContainer}>
+              <ActivityIndicator size="small" color={colors.darkGrey} />
+            </View>
+          )}
+        </View>
+
+        <Input
+          placeholder="Listing Title"
+          label="Title"
+          value={values.title}
+          onChangeText={(v) => onChange(v, "title")}
+        />
+        <Input
+          placeholder="Select the category"
+          label="Category"
+          value={values.category}
+          onChangeText={(v) => onChange(v, "category")}
+          type="picker"
+          options={categories}
+        />
+        <Input
+          placeholder="Enter price in USD"
+          label="Price"
+          value={values.price}
+          onChangeText={(v) => onChange(v, "price")}
+          keyboardType="numeric"
+        />
+        <Input
+          style={styles.textarea}
+          placeholder="Tell us more..."
+          label="Description"
+          value={values.description}
+          onChangeText={(v) => onChange(v, "description")}
+          multiline
+        />
+
+        <Button title="Submit" style={styles.button} />
+      </KeyboardAwareScrollView>
     </SafeAreaView>
   );
 };
@@ -210,6 +210,10 @@ const styles = StyleSheet.create({
   textarea: {
     minHeight: 140,
     paddingTop: 16,
+  },
+  button: {
+    marginTop: 16,
+    marginBottom: 60,
   },
 });
 
