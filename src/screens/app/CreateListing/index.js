@@ -6,40 +6,63 @@ import {
   TouchableOpacity,
   View,
   Image,
+  Pressable,
+  ActivityIndicator,
+  KeyboardAvoidingView,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import Header from "../../../components/Header";
 import { colors } from "../../../utils/colors";
 import { launchCameraAsync, launchImageLibraryAsync } from "expo-image-picker";
+import Input from "../../../components/Input";
+import Button from "../../../components/Button";
+import { categories } from "../../../data/categories";
 
 const CreateListing = ({ navigation }) => {
   const [images, setImages] = useState([]);
+  const [values, setValues] = useState({});
+  const [loading, setLoading] = useState(false);
 
   const goBack = () => {
     navigation.goBack();
   };
 
   const uploadNewImage = async (isCamera) => {
-    let result;
-    if (isCamera) {
-      result = await launchCameraAsync({
-        mediaTypes: "Images",
-        allowsEditing: true,
-        aspect: [4, 3],
-        quality: 1,
-      });
-    } else {
-      result = await launchImageLibraryAsync({
-        mediaTypes: "Images",
-        allowsEditing: true,
-        aspect: [4, 3],
-        quality: 1,
-      });
-    }
+    setLoading(true);
+    try {
+      let result;
+      if (isCamera) {
+        result = await launchCameraAsync({
+          mediaTypes: "Images",
+          allowsEditing: true,
+          aspect: [4, 3],
+          quality: 1,
+        });
+      } else {
+        result = await launchImageLibraryAsync({
+          mediaTypes: "Images",
+          allowsEditing: true,
+          aspect: [4, 3],
+          quality: 1,
+        });
+      }
 
-    if (!result.cancelled) {
-      setImages((list) => [...list, result]);
+      if (!result.cancelled) {
+        setImages((list) => [...list, result]);
+      }
+    } catch (error) {
+      console.error("Error uploading image:", error);
+    } finally {
+      setLoading(false);
     }
+  };
+
+  const onDeleteImage = (imageUri) => {
+    setImages((list) => list.filter((img) => img.uri !== imageUri));
+  };
+
+  const onChange = (value, key) => {
+    setValues((val) => ({ ...val, [key]: value }));
   };
 
   return (
@@ -49,28 +72,74 @@ const CreateListing = ({ navigation }) => {
         onBackPress={goBack}
         title="Create a new listing"
       />
-      <ScrollView style={styles.container}>
-        <Text style={styles.sectionTitle}>Upload Photos</Text>
 
-        <View style={styles.imageRow}>
-          <TouchableOpacity
-            style={styles.uploadContainer}
-            onPress={() => uploadNewImage(false)} // Open image library
-          >
-            <View style={styles.uploadCircle}>
-              <Text style={styles.uploadPlus}>+</Text>
-            </View>
-          </TouchableOpacity>
+      <KeyboardAvoidingView behavior="padding" style={{ flex: 1 }}>
+        <ScrollView style={styles.container}>
+          <Text style={styles.sectionTitle}>Upload Photos</Text>
 
-          {images?.map((image, index) => (
-            <Image
-              key={index}
-              style={styles.image}
-              source={{ uri: image.uri }}
+          <View style={styles.imageRow}>
+            <TouchableOpacity
+              style={styles.uploadContainer}
+              onPress={() => uploadNewImage(false)}
+            >
+              <View style={styles.uploadCircle}>
+                <Text style={styles.uploadPlus}>+</Text>
+              </View>
+            </TouchableOpacity>
+
+            {images.map((image, index) => (
+              <View style={styles.imageCont} key={image.uri}>
+                <Image style={styles.image} source={{ uri: image.uri }} />
+                <Pressable
+                  hitSlop={20}
+                  onPress={() => onDeleteImage(image.uri)}
+                >
+                  <Image
+                    style={styles.delete}
+                    source={require("../../../assets/close.png")}
+                  />
+                </Pressable>
+              </View>
+            ))}
+            {loading && (
+              <View style={styles.loadingContainer}>
+                <ActivityIndicator size="small" color={colors.darkGrey} />
+              </View>
+            )}
+          </View>
+          <KeyboardAvoidingView behavior="padding">
+            <Input
+              placeholder="Listing Title"
+              label="Title"
+              value={values.title}
+              onChangeText={(v) => onChange(v, "title")}
             />
-          ))}
-        </View>
-      </ScrollView>
+            <Input
+              placeholder="Select the category"
+              label="Category"
+              value={values.category}
+              onChangeText={(v) => onChange(v, "category")}
+              type="picker"
+              options={categories}
+            />
+            <Input
+              placeholder="Enter price in USD"
+              label="Price"
+              value={values.price}
+              onChangeText={(v) => onChange(v, "price")}
+              keyboardType="numeric"
+            />
+            <Input
+              style={styles.textarea}
+              placeholder="Tell us more..."
+              label="Description"
+              value={values.description}
+              onChangeText={(v) => onChange(v, "description")}
+              multiline
+            />
+          </KeyboardAvoidingView>
+        </ScrollView>
+      </KeyboardAvoidingView>
     </SafeAreaView>
   );
 };
@@ -90,8 +159,6 @@ const styles = StyleSheet.create({
     width: 100,
     height: 100,
     borderRadius: 8,
-    marginTop: 8,
-    marginRight: 8,
   },
   uploadContainer: {
     width: 100,
@@ -124,6 +191,22 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     flexWrap: "wrap",
+  },
+  imageCont: {
+    flexDirection: "row",
+    marginBottom: 12,
+    position: "relative",
+  },
+  delete: {
+    width: 24,
+    height: 24,
+    marginLeft: -16,
+    marginTop: -10,
+  },
+  loadingContainer: {},
+  textarea: {
+    minHeight: 140,
+    paddingTop: 16,
   },
 });
 
