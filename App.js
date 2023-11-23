@@ -83,7 +83,7 @@ const Tabs = () => (
 );
 
 export default function App() {
-  const isSignedIn = true;
+  const isSignedIn = false;
 
   useEffect(() => {}, []);
 
