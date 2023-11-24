@@ -12,40 +12,51 @@ const Home = ({ navigation }) => {
   const [selectedCategory, setSelectedCatgory] = useState();
   const [keyword, setKeyword] = useState();
   const { services, setServices } = useContext(ServicesContext);
-  const [filteredProducts, setFilteredProducts] = useState(services);
+  const [filteredProducts, setFilteredProducts] = useState([]);
   console.log("services :>>", services);
 
   useEffect(() => {
-    (async () => {
-      const data = await getServices();
-      console.log("data :>>", data);
-      setServices(data);
-    })();
-  }, []);
+    const fetchData = async () => {
+      try {
+        const data = await getServices();
+        console.log("data :>>", data);
+        setServices(data);
+
+        // Now that services are available, update filteredProducts
+        setFilteredProducts(data);
+      } catch (error) {
+        console.error("Error fetching services:", error);
+      }
+    };
+
+    fetchData();
+  }, [setServices]);
 
   useEffect(() => {
-    if (selectedCategory && !keyword) {
-      const updatedProducts = services.filter(
-        (product) => String(product?.category) === String(selectedCategory)
-      );
+    if (services) {
+      if (selectedCategory && !keyword) {
+        const updatedProducts = services.filter(
+          (product) => String(product?.category) === String(selectedCategory)
+        );
 
-      setFilteredProducts(updatedProducts);
-    } else if (selectedCategory && keyword) {
-      const updatedProducts = services.filter(
-        (product) =>
-          String(product?.category) === String(selectedCategory) &&
+        setFilteredProducts(updatedProducts);
+      } else if (selectedCategory && keyword) {
+        const updatedProducts = services.filter(
+          (product) =>
+            String(product?.category) === String(selectedCategory) &&
+            product?.title?.toLowerCase().includes(keyword?.toLowerCase())
+        );
+        setFilteredProducts(updatedProducts);
+      } else if (!selectedCategory && keyword) {
+        const updatedProducts = services.filter((product) =>
           product?.title?.toLowerCase().includes(keyword?.toLowerCase())
-      );
-      setFilteredProducts(updatedProducts);
-    } else if (!selectedCategory && keyword) {
-      const updatedProducts = services.filter((product) =>
-        product?.title?.toLowerCase().includes(keyword?.toLowerCase())
-      );
-      setFilteredProducts(updatedProducts);
-    } else if (!keyword && !selectedCategory) {
-      setFilteredProducts(services);
+        );
+        setFilteredProducts(updatedProducts);
+      } else if (!keyword && !selectedCategory) {
+        setFilteredProducts(services);
+      }
     }
-  }, [selectedCategory, keyword]);
+  }, [selectedCategory, keyword, services]);
 
   const renderCategoryItem = ({ item, index }) => {
     return (
