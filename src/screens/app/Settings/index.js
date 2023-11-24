@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import {
   StyleSheet,
   View,
@@ -15,25 +15,36 @@ import ListItem from "../../../components/ListItem";
 import Button from "../../../components/Button";
 import { colors } from "../../../utils/colors";
 import EditableBox from "../../../components/EditableBox";
+import { ProfileContext } from "../../../../App";
+import { updateProfile } from "../../../utils/backendCalls";
 
 const Settings = ({ navigation }) => {
   const [editing, setEditing] = useState(false);
+  const { profile, setProfile } = useContext(ProfileContext);
   const [values, setValues] = useState({
-    name: "User",
-    email: "user@mail.com",
+    _id: profile?._id,
+    fullName: profile?.fullName,
+    email: profile?.email,
   });
+
   const onEditPress = () => {
     setEditing(true);
   };
-  const onSave = () => {
+
+  const onSave = async () => {
+    const updatedProfile = await updateProfile(values);
+    setProfile(updatedProfile);
     setEditing(false);
   };
+
   const onChange = (key, value) => {
     setValues((v) => ({ ...v, [key]: value }));
   };
+
   const onItemPress = () => {
     Linking.openURL("https://google.com");
   };
+
   const goBack = () => {
     navigation.goBack();
   };
@@ -53,8 +64,8 @@ const Settings = ({ navigation }) => {
         </View>
         <EditableBox
           label="Name"
-          onChangeText={(v) => onChange("name", v)}
-          value={values.name}
+          onChangeText={(v) => onChange("fullName", v)}
+          value={values.fullName}
           editable={editing}
         />
         <EditableBox

@@ -8,3 +8,8 @@ export const request = ({ url, method, data }) => {
     data,
   });
 };
+
+export const addTokenToAxios = (token) => {
+  console.log("token :>> ", token);
+  axios.defaults.headers.Authorization = token;
+};

@@ -1,38 +1,49 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import { FlatList, StyleSheet, ScrollView, View, Text } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import Header from "../../../components/Header";
 import { categories } from "../../../data/categories";
-import { products } from "../../../data/products";
 import CategoryBox from "../../../components/CategoryBox";
 import ProductHomeItem from "../../../components/ProductHomeItem";
+import { getServices } from "../../../utils/backendCalls";
+import { ServicesContext } from "../../../../App";
 
 const Home = ({ navigation }) => {
   const [selectedCategory, setSelectedCatgory] = useState();
   const [keyword, setKeyword] = useState();
-  const [filteredProducts, setFilteredProducts] = useState(products);
-  console.log("keyword :>>", keyword);
+  const { services, setServices } = useContext(ServicesContext);
+  const [filteredProducts, setFilteredProducts] = useState(services);
+  console.log("services :>>", services);
+
+  useEffect(() => {
+    (async () => {
+      const data = await getServices();
+      console.log("data :>>", data);
+      setServices(data);
+    })();
+  }, []);
 
   useEffect(() => {
     if (selectedCategory && !keyword) {
-      const updatedProducts = products.filter(
-        (product) => product?.category === selectedCategory
+      const updatedProducts = services.filter(
+        (product) => String(product?.category) === String(selectedCategory)
       );
+
       setFilteredProducts(updatedProducts);
     } else if (selectedCategory && keyword) {
-      const updatedProducts = products.filter(
+      const updatedProducts = services.filter(
         (product) =>
-          product?.category === selectedCategory &&
+          String(product?.category) === String(selectedCategory) &&
           product?.title?.toLowerCase().includes(keyword?.toLowerCase())
       );
       setFilteredProducts(updatedProducts);
     } else if (!selectedCategory && keyword) {
-      const updatedProducts = products.filter((product) =>
+      const updatedProducts = services.filter((product) =>
         product?.title?.toLowerCase().includes(keyword?.toLowerCase())
       );
       setFilteredProducts(updatedProducts);
     } else if (!keyword && !selectedCategory) {
-      setFilteredProducts(products);
+      setFilteredProducts(services);
     }
   }, [selectedCategory, keyword]);
 

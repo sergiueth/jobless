@@ -17,6 +17,7 @@ import CreateListing from "./src/screens/app/CreateListing";
 import MyListings from "./src/screens/app/MyListings";
 import { UserContext } from "./App";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { addTokenToAxios } from "./src/utils/request";
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -91,6 +92,12 @@ export default function Routes() {
       setUser({ token });
     })();
   }, []);
+
+  useEffect(() => {
+    if (user?.token) {
+      addTokenToAxios(user?.token);
+    }
+  }, [user]);
 
   const theme = {
     colors: {

@@ -6,9 +6,13 @@ import { SafeAreaProvider } from "react-native-safe-area-context";
 import Routes from "./Routes";
 
 export const UserContext = React.createContext();
+export const ProfileContext = React.createContext();
+export const ServicesContext = React.createContext([]);
 
 export default function App() {
   const [user, setUser] = useState();
+  const [profile, setProfile] = useState();
+  const [services, setServices] = useState();
 
   useEffect(() => {}, []);
 
@@ -17,7 +21,11 @@ export default function App() {
       <View style={styles.container}>
         <StatusBar style="auto" />
         <UserContext.Provider value={{ user, setUser }}>
-          <Routes />
+          <ProfileContext.Provider value={{ profile, setProfile }}>
+            <ServicesContext.Provider value={{ services, setServices }}>
+              <Routes />
+            </ServicesContext.Provider>
+          </ProfileContext.Provider>
         </UserContext.Provider>
       </View>
     </SafeAreaProvider>
