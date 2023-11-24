@@ -1,13 +1,18 @@
-import React, { useState } from "react";
-import { Image, Text, StyleSheet, View, ScrollView } from "react-native";
+import React, { useState, useContext } from "react";
+import { Image, Text, StyleSheet, ScrollView } from "react-native";
 import { colors } from "../../../utils/colors";
 import AuthHeader from "../../../components/AuthHeader";
 import Input from "../../../components/Input";
 import Button from "../../../components/Button";
 import Separator from "../../../components/Separator";
 import GoogleLogin from "../../../components/GoogleLogin";
+import { UserContext } from "../../../../App";
+import { login } from "../../../utils/backendCalls";
 
 const Signin = ({ navigation }) => {
+  const [values, setValues] = useState({});
+  const { setUser } = useContext(UserContext);
+
   const onSignUp = () => {
     navigation.navigate("Signup");
   };
@@ -16,14 +21,35 @@ const Signin = ({ navigation }) => {
     navigation.goBack();
   };
 
+  const onChange = (key, value) => {
+    setValues((v) => ({ ...v, [key]: value }));
+  };
+
+  const onSubmit = async () => {
+    const token = await login(values);
+
+    setUser({ token });
+  };
+
   return (
     <>
       <ScrollView style={styles.container}>
         <AuthHeader onBackPress={onBack} title="Sign In" />
-        <Input label="E-mail" placeholder="example@gmail.com" />
-        <Input isPassword label="Pawssord" placeholder="********" />
+        <Input
+          value={values.email}
+          onChangeText={(v) => onChange("email", v)}
+          label="E-mail"
+          placeholder="example@gmail.com"
+        />
+        <Input
+          value={values.password}
+          onChangeText={(v) => onChange("password", v)}
+          isPassword
+          label="Pawssord"
+          placeholder="********"
+        />
 
-        <Button style={styles.button} title="Sign In" />
+        <Button onPress={onSubmit} style={styles.button} title="Sign In" />
 
         <Separator text="Or sign in with" />
 

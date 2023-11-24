@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import { Image, Text, StyleSheet, View, Alert } from "react-native";
 import { colors } from "../../../utils/colors";
 import AuthHeader from "../../../components/AuthHeader";
@@ -8,10 +8,13 @@ import Button from "../../../components/Button";
 import Separator from "../../../components/Separator";
 import GoogleLogin from "../../../components/GoogleLogin";
 import { request } from "../../../utils/request";
+import { signup } from "../../../utils/backendCalls";
+import { UserContext } from "../../../../App";
 
 const Signup = ({ navigation }) => {
   const [checked, setChecked] = useState(false);
   const [values, setValues] = useState({});
+  const { setUser } = useContext(UserContext);
 
   const onSignIn = () => {
     navigation.navigate("Signin");
@@ -47,12 +50,10 @@ const Signup = ({ navigation }) => {
         return;
       }
 
-      const response = await request({
-        url: "/user/register",
-        method: "post",
-        data: values,
-      });
-      console.log("response :>> ", response);
+      const token = await signup(values);
+      setUser({ token });
+
+      console.log("token :>> ", response);
     } catch (error) {
       console.log("error :>> ", error);
     }
